@@ -199,23 +199,41 @@ const Index = () => {
                 <span className="text-xs font-600 uppercase tracking-widest text-accent">
                   Предварительная смета
                 </span>
-                <div className="mt-6 space-y-4 text-sm">
-                  <Row label="Площадь" value={`${total.area.toFixed(2)} м²`} />
-                  <Row label="Плёнка" value={fmt(total.film)} />
-                  <Row
-                    label={total.isMinWork ? 'Работы (минимум)' : 'Работы (термовакуумный пресс)'}
-                    value={fmt(total.work)}
-                  />
+                <div className="mt-5 text-xs text-primary-foreground/50 uppercase tracking-widest mb-3">
+                  Площадь: {total.area.toFixed(2)} м²
                 </div>
-                {total.isMinWork && (
-                  <div className="mt-4 flex items-start gap-2 border border-accent/40 bg-accent/10 p-3 text-xs text-primary-foreground/80">
-                    <Icon name="Info" size={14} className="mt-0.5 shrink-0 text-accent" />
-                    <span>
-                      Минимальная стоимость работ — 11 700 ₽ (за объём до 1,5 м²
-                      на термовакуумном прессе).
+
+                {/* Плёнка */}
+                <div className="mb-3 border border-sky-400/30 bg-sky-500/10 p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="h-2 w-2 rounded-full bg-sky-400" />
+                    <span className="text-xs uppercase tracking-wide text-sky-300">Материал (плёнка)</span>
+                  </div>
+                  <div className="font-display text-2xl font-700 text-sky-300">{fmt(total.film)}</div>
+                  <div className="text-[11px] text-primary-foreground/40 mt-1">
+                    {total.area.toFixed(2)} м² × {fmt(MATERIALS.find(m => m.id === material)?.price ?? 0).replace(' ₽', '')} ₽/м²
+                  </div>
+                </div>
+
+                {/* Работы */}
+                <div className="border border-accent/40 bg-accent/10 p-4">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="h-2 w-2 rounded-full bg-accent" />
+                    <span className="text-xs uppercase tracking-wide text-accent">
+                      {total.isMinWork ? 'Работы · минимум' : 'Работы (термовакуум. пресс)'}
                     </span>
                   </div>
-                )}
+                  <div className="font-display text-2xl font-700 text-accent">{fmt(total.work)}</div>
+                  {total.isMinWork ? (
+                    <div className="text-[11px] text-primary-foreground/40 mt-1">
+                      Минимум 11 700 ₽ за объём до 1,5 м²
+                    </div>
+                  ) : (
+                    <div className="text-[11px] text-primary-foreground/40 mt-1">
+                      {total.area.toFixed(2)} м² × 7 800 ₽/м²
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="mt-8 border-t border-white/15 pt-6">
                 <div className="text-xs uppercase tracking-wide text-primary-foreground/60">
@@ -322,11 +340,6 @@ const Index = () => {
   );
 };
 
-const Row = ({ label, value }: { label: string; value: string }) => (
-  <div className="flex items-center justify-between border-b border-white/10 pb-3">
-    <span className="text-primary-foreground/60">{label}</span>
-    <span className="font-display font-600">{value}</span>
-  </div>
-);
+
 
 export default Index;
