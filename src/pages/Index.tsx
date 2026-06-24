@@ -18,14 +18,14 @@ const WORK_RATE = 7800;
 const MIN_WORK_PRICE = 11700;
 
 const Index = () => {
-  const [width, setWidth] = useState('3');
-  const [height, setHeight] = useState('2.5');
+  const [width, setWidth] = useState('3000');
+  const [height, setHeight] = useState('2500');
   const [qty, setQty] = useState(1);
   const [material, setMaterial] = useState(MATERIALS[0].id);
 
   const total = useMemo(() => {
-    const w = parseFloat(width) || 0;
-    const h = parseFloat(height) || 0;
+    const w = (parseFloat(width) || 0) / 1000;
+    const h = (parseFloat(height) || 0) / 1000;
     const areaOne = w * h;
     const area = areaOne * qty;
     const mat = MATERIALS.find((m) => m.id === material) ?? MATERIALS[0];
@@ -137,12 +137,12 @@ const Index = () => {
               <div className="grid gap-6 sm:grid-cols-3">
                 <div>
                   <Label className="mb-2 block text-xs font-600 uppercase tracking-wide text-muted-foreground">
-                    Ширина, м
+                    Ширина, мм
                   </Label>
                   <Input
                     type="number"
                     min="0"
-                    step="0.1"
+                    step="1"
                     value={width}
                     onChange={(e) => setWidth(e.target.value)}
                     className="rounded-none font-display text-lg"
@@ -150,12 +150,12 @@ const Index = () => {
                 </div>
                 <div>
                   <Label className="mb-2 block text-xs font-600 uppercase tracking-wide text-muted-foreground">
-                    Высота, м
+                    Высота, мм
                   </Label>
                   <Input
                     type="number"
                     min="0"
-                    step="0.1"
+                    step="1"
                     value={height}
                     onChange={(e) => setHeight(e.target.value)}
                     className="rounded-none font-display text-lg"
