@@ -147,6 +147,11 @@ const Index = () => {
                     onChange={(e) => setWidth(e.target.value)}
                     className="rounded-none font-display text-lg"
                   />
+                  {parseFloat(width) > 0 && (
+                    <div className="mt-1.5 text-xs text-muted-foreground">
+                      = {(parseFloat(width) / 1000).toFixed(3)} м
+                    </div>
+                  )}
                 </div>
                 <div>
                   <Label className="mb-2 block text-xs font-600 uppercase tracking-wide text-muted-foreground">
@@ -160,6 +165,11 @@ const Index = () => {
                     onChange={(e) => setHeight(e.target.value)}
                     className="rounded-none font-display text-lg"
                   />
+                  {parseFloat(height) > 0 && (
+                    <div className="mt-1.5 text-xs text-muted-foreground">
+                      = {(parseFloat(height) / 1000).toFixed(3)} м
+                    </div>
+                  )}
                 </div>
                 <div>
                   <Label className="mb-2 block text-xs font-600 uppercase tracking-wide text-muted-foreground">
