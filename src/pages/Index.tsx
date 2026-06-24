@@ -20,19 +20,21 @@ const MIN_WORK_PRICE = 11700;
 const Index = () => {
   const [width, setWidth] = useState('3');
   const [height, setHeight] = useState('2.5');
+  const [qty, setQty] = useState(1);
   const [material, setMaterial] = useState(MATERIALS[0].id);
 
   const total = useMemo(() => {
     const w = parseFloat(width) || 0;
     const h = parseFloat(height) || 0;
-    const area = w * h;
+    const areaOne = w * h;
+    const area = areaOne * qty;
     const mat = MATERIALS.find((m) => m.id === material) ?? MATERIALS[0];
     const film = area * mat.price;
     const rawWork = area * WORK_RATE;
     const work = Math.max(rawWork, MIN_WORK_PRICE);
     const isMinWork = work > rawWork && area > 0;
-    return { area, film, work, isMinWork, sum: film + work };
-  }, [width, height, material]);
+    return { areaOne, area, qty, film, work, isMinWork, sum: film + work };
+  }, [width, height, qty, material]);
 
   const fmt = (n: number) =>
     new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
@@ -132,7 +134,7 @@ const Index = () => {
           <div className="grid gap-6 lg:grid-cols-5">
             {/* Inputs */}
             <div className="space-y-8 border border-border bg-card p-6 md:p-8 lg:col-span-3">
-              <div className="grid gap-6 sm:grid-cols-2">
+              <div className="grid gap-6 sm:grid-cols-3">
                 <div>
                   <Label className="mb-2 block text-xs font-600 uppercase tracking-wide text-muted-foreground">
                     Ширина, м
@@ -158,6 +160,28 @@ const Index = () => {
                     onChange={(e) => setHeight(e.target.value)}
                     className="rounded-none font-display text-lg"
                   />
+                </div>
+                <div>
+                  <Label className="mb-2 block text-xs font-600 uppercase tracking-wide text-muted-foreground">
+                    Кол-во, шт
+                  </Label>
+                  <div className="flex items-center border border-input rounded-none overflow-hidden">
+                    <button
+                      onClick={() => setQty(q => Math.max(1, q - 1))}
+                      className="flex h-10 w-10 shrink-0 items-center justify-center bg-secondary text-foreground hover:bg-muted transition-colors"
+                    >
+                      <Icon name="Minus" size={16} />
+                    </button>
+                    <div className="flex-1 text-center font-display text-lg font-600">
+                      {qty}
+                    </div>
+                    <button
+                      onClick={() => setQty(q => q + 1)}
+                      className="flex h-10 w-10 shrink-0 items-center justify-center bg-secondary text-foreground hover:bg-muted transition-colors"
+                    >
+                      <Icon name="Plus" size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -199,8 +223,10 @@ const Index = () => {
                 <span className="text-xs font-600 uppercase tracking-widest text-accent">
                   Предварительная смета
                 </span>
-                <div className="mt-5 text-xs text-primary-foreground/50 uppercase tracking-widest mb-3">
-                  Площадь: {total.area.toFixed(2)} м²
+                <div className="mt-5 mb-3 flex flex-wrap items-center gap-3 text-xs text-primary-foreground/50 uppercase tracking-widest">
+                  <span>{total.qty} шт. × {total.areaOne.toFixed(2)} м²</span>
+                  <span className="text-primary-foreground/25">=</span>
+                  <span className="font-600 text-primary-foreground/70">{total.area.toFixed(2)} м² итого</span>
                 </div>
 
                 {/* Плёнка */}
