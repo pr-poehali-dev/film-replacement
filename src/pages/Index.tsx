@@ -14,6 +14,9 @@ const MATERIALS = [
   { id: 'armored', name: 'Бронеплёнка', price: 3400, desc: 'Ударопрочная, защита от взлома' },
 ];
 
+const WORK_RATE = 7800;
+const MIN_WORK_PRICE = 11700;
+
 const Index = () => {
   const [width, setWidth] = useState('3');
   const [height, setHeight] = useState('2.5');
@@ -24,9 +27,11 @@ const Index = () => {
     const h = parseFloat(height) || 0;
     const area = w * h;
     const mat = MATERIALS.find((m) => m.id === material) ?? MATERIALS[0];
-    const work = area * 450;
     const film = area * mat.price;
-    return { area, film, work, sum: film + work };
+    const rawWork = area * WORK_RATE;
+    const work = Math.max(rawWork, MIN_WORK_PRICE);
+    const isMinWork = work > rawWork && area > 0;
+    return { area, film, work, isMinWork, sum: film + work };
   }, [width, height, material]);
 
   const fmt = (n: number) =>
@@ -197,8 +202,20 @@ const Index = () => {
                 <div className="mt-6 space-y-4 text-sm">
                   <Row label="Площадь" value={`${total.area.toFixed(2)} м²`} />
                   <Row label="Плёнка" value={fmt(total.film)} />
-                  <Row label="Монтаж (450 ₽/м²)" value={fmt(total.work)} />
+                  <Row
+                    label={total.isMinWork ? 'Работы (минимум)' : 'Работы (термовакуумный пресс)'}
+                    value={fmt(total.work)}
+                  />
                 </div>
+                {total.isMinWork && (
+                  <div className="mt-4 flex items-start gap-2 border border-accent/40 bg-accent/10 p-3 text-xs text-primary-foreground/80">
+                    <Icon name="Info" size={14} className="mt-0.5 shrink-0 text-accent" />
+                    <span>
+                      Минимальная стоимость работ — 11 700 ₽ (за объём до 1,5 м²
+                      на термовакуумном прессе).
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="mt-8 border-t border-white/15 pt-6">
                 <div className="text-xs uppercase tracking-wide text-primary-foreground/60">
