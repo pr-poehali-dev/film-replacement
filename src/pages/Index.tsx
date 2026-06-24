@@ -17,7 +17,39 @@ const MATERIALS = [
 const WORK_RATE = 7800;
 const MIN_WORK_PRICE = 11700;
 
+const CATALOG_CATEGORIES = [
+  {
+    id: 'matte',
+    name: 'Матовые',
+    desc: 'Антибликовое покрытие, равномерный тон. Идеально для фасадов с естественным освещением.',
+    img: 'https://cdn.poehali.dev/projects/96798f99-2427-4bda-a31c-e83199c74b7b/files/1c4d8dc2-a80d-47fd-a9e8-eb5ce85f821a.jpg',
+    items: ['Белый матовый', 'Серый матовый', 'Чёрный матовый', 'Бежевый матовый', 'Кремовый матовый', 'Антрацит матовый'],
+  },
+  {
+    id: 'glossy',
+    name: 'Глянцевые',
+    desc: 'Зеркальный блеск, насыщенная палитра. Придают фасаду представительный премиальный вид.',
+    img: 'https://cdn.poehali.dev/projects/96798f99-2427-4bda-a31c-e83199c74b7b/files/ff9eb2bf-6010-4a0a-b4e1-9118c51fad16.jpg',
+    items: ['Белый глянец', 'Чёрный глянец', 'Красный глянец', 'Синий глянец', 'Зелёный глянец', 'Золотой глянец'],
+  },
+  {
+    id: 'texture',
+    name: 'Текстуры дерева',
+    desc: 'Реалистичная имитация натуральных пород. Тепло и природность без затрат на дерево.',
+    img: 'https://cdn.poehali.dev/projects/96798f99-2427-4bda-a31c-e83199c74b7b/files/e4d243b9-3ce6-4427-8865-a7890c6bc6b7.jpg',
+    items: ['Дуб светлый', 'Дуб тёмный', 'Орех', 'Венге', 'Сосна', 'Ясень'],
+  },
+  {
+    id: 'metallic',
+    name: 'Металлик',
+    desc: 'Эффект шлифованного металла. Стойкость к механическим повреждениям, долгий срок службы.',
+    img: 'https://cdn.poehali.dev/projects/96798f99-2427-4bda-a31c-e83199c74b7b/files/26554882-c44a-4b7d-92de-675927c39a12.jpg',
+    items: ['Серебро браш', 'Золото браш', 'Бронза', 'Хром', 'Титан', 'Медь'],
+  },
+];
+
 const Index = () => {
+  const [activeCategory, setActiveCategory] = useState(CATALOG_CATEGORIES[0].id);
   const [width, setWidth] = useState('3000');
   const [height, setHeight] = useState('2500');
   const [qty, setQty] = useState(1);
@@ -53,6 +85,7 @@ const Index = () => {
             </span>
           </div>
           <nav className="hidden items-center gap-8 text-sm font-500 text-muted-foreground md:flex">
+            <a href="#catalog" className="transition-colors hover:text-foreground">Каталог</a>
             <a href="#calc" className="transition-colors hover:text-foreground">Калькулятор</a>
             <a href="#advantages" className="transition-colors hover:text-foreground">Преимущества</a>
             <a href="#contact" className="transition-colors hover:text-foreground">Контакты</a>
@@ -112,6 +145,105 @@ const Index = () => {
               className="relative aspect-square w-full object-cover grayscale-[15%]"
             />
           </div>
+        </div>
+      </section>
+
+      {/* Catalog */}
+      <section id="catalog" className="border-b border-border">
+        <div className="container py-16 md:py-24">
+          <div className="mb-10 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <div>
+              <span className="text-xs font-600 uppercase tracking-widest text-accent">
+                Плёнки ПВХ · Адилет
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-700 uppercase md:text-4xl">
+                Каталог материалов
+              </h2>
+              <p className="mt-2 text-muted-foreground">
+                Более 200 оттенков и текстур для любого фасадного решения.
+              </p>
+            </div>
+            <a
+              href="https://adilet.net/shop/plenka-pvh/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-500 text-accent underline-offset-4 hover:underline"
+            >
+              Полный каталог на сайте Адилет
+              <Icon name="ExternalLink" size={14} />
+            </a>
+          </div>
+
+          {/* Category tabs */}
+          <div className="mb-8 flex flex-wrap gap-2">
+            {CATALOG_CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`border px-5 py-2 font-display text-sm font-500 uppercase tracking-wide transition-all ${
+                  activeCategory === cat.id
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-border bg-background text-foreground hover:border-primary'
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Category content */}
+          {CATALOG_CATEGORIES.filter((c) => c.id === activeCategory).map((cat) => (
+            <div key={cat.id} className="grid gap-6 lg:grid-cols-5">
+              <div className="lg:col-span-2">
+                <img
+                  src={cat.img}
+                  alt={cat.name}
+                  className="aspect-[4/3] w-full object-cover"
+                />
+              </div>
+              <div className="flex flex-col justify-between lg:col-span-3">
+                <div>
+                  <h3 className="font-display text-2xl font-700 uppercase">{cat.name}</h3>
+                  <p className="mt-3 text-muted-foreground leading-relaxed">{cat.desc}</p>
+                  <div className="mt-6">
+                    <div className="mb-3 text-xs font-600 uppercase tracking-widest text-muted-foreground">
+                      Доступные варианты
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {cat.items.map((item) => (
+                        <span
+                          key={item}
+                          className="border border-border bg-secondary px-3 py-1.5 text-sm"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-border pt-6">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Icon name="CheckCircle" size={16} className="text-accent" />
+                    Сертифицированный материал
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Icon name="CheckCircle" size={16} className="text-accent" />
+                    Толщина 0,3–0,5 мм
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Icon name="CheckCircle" size={16} className="text-accent" />
+                    Срок службы до 10 лет
+                  </div>
+                  <Button asChild className="ml-auto rounded-none font-500">
+                    <a href="#calc">
+                      Рассчитать стоимость
+                      <Icon name="ArrowRight" size={16} className="ml-2" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
